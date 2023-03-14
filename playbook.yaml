@@ -1,0 +1,22 @@
+---
+# playbook.yml
+- name: 'Provision Image'
+  become: true
+  hosts: all
+  gather_facts: False  
+
+  tasks:
+    - name: Wait for host to be ready
+      wait_for:
+        port: 22
+        host: '{{ inventory_hostname }}'
+        search_regex: OpenSSH
+        delay: 5
+      connection: local
+
+    - name: Install Apache
+      apt:
+        name: 'apache2'
+        update_cache: true
+        state: present
+
